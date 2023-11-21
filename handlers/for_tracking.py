@@ -2,7 +2,7 @@ from aiogram import Router
 from aiogram.types import Message, ReplyKeyboardRemove
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from keyboards.for_keyboard import wallet_keyboard, main_keyboard
+from keyboards.for_keyboard import wallet_keyboard, main_keyboard, inc_exp_keyboard
 from wallet_db import insert_data, startdb, select_data
 from tabulate import tabulate
 
@@ -35,7 +35,8 @@ async def wallet_button(msg: Message):
     try:
         dbpool = await startdb()
         if dbpool:
-            data = await select_data(dbpool)
+            user_id = msg.from_user.id
+            data = await select_data(dbpool, user_id)
             table = tabulate(data, headers="keys", tablefmt="pretty", colalign=('left', 'center', 'center', 'center'))
             await msg.answer(text=f'{table}', reply_markup=await wallet_keyboard())
     except Exception as ex:
@@ -80,8 +81,7 @@ async def get_amount(msg: Message, state: FSMContext):
     try:
         amount = msg.text
         await state.update_data(amount=amount)
-        await msg.answer(text=f'''
-Please enter a type of operation(income/expense):''')
+        await msg.answer(text=f'''Please enter a type of operation(income/expense):''')
         await state.set_state(Wallet.typeexpinc)
     except Exception as ex:
         await msg.answer(str(ex))
@@ -90,8 +90,9 @@ Please enter a type of operation(income/expense):''')
 async def get_type(msg: Message, state: FSMContext):
     try:
         typeexpinc = msg.text.lower()
+        user_id = msg.from_user.id
         await state.update_data(typeexpinc=typeexpinc)
-        if typeexpinc in ('income'.lower(), 'expense'.lower()):
+        if typeexpinc in ('income', 'expense'):
             dbpool = await startdb()
             if dbpool:
                 data = await state.get_data()
@@ -100,7 +101,7 @@ async def get_type(msg: Message, state: FSMContext):
                 amount = data.get('amount')
                 if amount.isdigit():
                     typeexpinc = data.get('typeexpinc')
-                    await insert_data(dbpool, date, description, amount, typeexpinc)
+                    await insert_data(dbpool, date, description, amount, typeexpinc, user_id)
                     await msg.answer(text=f'''
 You successfully added:
 Date: {date}
@@ -115,5 +116,4 @@ Type: {typeexpinc}''', reply_markup=await wallet_keyboard())
             await msg.answer(text=f'''Make sure you have entered income or expense. Enter again.''')
     except Exception as ex:
         await msg.answer(str(ex))
-
     

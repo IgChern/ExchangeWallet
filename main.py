@@ -28,8 +28,9 @@ if __name__ == "__main__":
     dbpool = loop.run_until_complete(startdb())
 
     try:
-        loop.create_task(start(loop))
-        loop.run_forever()
+        loop.run_until_complete(start(loop))
+    except KeyboardInterrupt:
+        pass
     finally:
         if dbpool:
             loop.run_until_complete(dbpool.close())
