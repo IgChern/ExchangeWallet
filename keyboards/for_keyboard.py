@@ -25,3 +25,12 @@ async def wallet_keyboard():
     kb.button(text='Back')
     kb.adjust(3)
     return kb.as_markup(resize_keyboard=True)
+
+# Income and expense button
+async def inc_exp_keyboard():
+    kb = ReplyKeyboardBuilder()
+    kb.button(text="Income")
+    kb.button(text='Expense')
+    kb.button(text='Back')
+    kb.adjust(3)
+    return kb.as_markup(resize_keyboard=True)
