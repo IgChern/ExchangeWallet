@@ -1,6 +1,6 @@
-# FinancialBot
+# ExchangeWalletBot
 
-FinancialBot is a Telegram bot that provides currency exchange rates and allows you to keep track of your expenses and income in a personal financial journal.
+ExchangeWalletBot is a Telegram bot that provides currency exchange rates and allows you to keep track of your expenses and income in a personal financial journal.
 
 ## Features
 
@@ -49,4 +49,4 @@ Feel free to contact me for any questions or issues.
 
 Special thanks to the developers of the libraries and APIs used in this project.
 
-Enjoy using FinancialBot!
+Enjoy using ExchangeWalletBot!
