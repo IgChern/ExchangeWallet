@@ -21,6 +21,11 @@ create_script = '''CREATE TABLE IF NOT EXISTS income_and_expenses(
                     typeexpinc VARCHAR(10) NOT NULL
                     );'''
 
+create_users_id_table = '''CREATE TABLE IF NOT EXISTS usersid(
+                    id int PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+                    useridtg int
+                    );'''
+
 insert_query = '''INSERT INTO income_and_expenses (date, description, amount, typeexpinc)
                             VALUES ($1, $2, $3, $4);'''
 
